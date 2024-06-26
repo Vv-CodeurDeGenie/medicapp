@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Book Appointment</title>
+</head>
+<body>
+    <h1>Book Appointment</h1>
+    <form method="POST" action="{{ url_for('book_appointment') }}">
+        {{ form.hidden_tag() }}
+        <label for="date">Date:</label>
+        {{ form.date }}
+        <br>
+        <label for="doctor">Doctor:</label>
+        {{ form.doctor }}
+        <br>
+        <label for="patient_id">Patient:</label>
+        {{ form.patient_id }}
+        <br>
+        {{ form.submit(class="btn btn-primary") }}
+    </form>
+</body>
+</html>

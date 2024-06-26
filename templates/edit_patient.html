@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Patient</title>
+</head>
+<body>
+    <h1>Edit Patient</h1>
+    <form method="POST" action="{{ url_for('edit_patient', patient_id=patient.id) }}">
+        {{ form.hidden_tag() }}
+        <label for="name">Name:</label>
+        {{ form.name }}
+        <br>
+        <label for="age">Age:</label>
+        {{ form.age }}
+        <br>
+        <label for="medical_history">Medical History:</label>
+        {{ form.medical_history }}
+        <br>
+        {{ form.submit(class="btn btn-primary") }}
+    </form>
+</body>
+</html>
