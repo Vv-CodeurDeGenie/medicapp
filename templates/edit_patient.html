@@ -1,23 +1,25 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Edit Patient</title>
-</head>
-<body>
-    <h1>Edit Patient</h1>
-    <form method="POST" action="{{ url_for('edit_patient', patient_id=patient.id) }}">
-        {{ form.hidden_tag() }}
-        <label for="name">Name:</label>
-        {{ form.name }}
-        <br>
-        <label for="age">Age:</label>
-        {{ form.age }}
-        <br>
-        <label for="medical_history">Medical History:</label>
-        {{ form.medical_history }}
-        <br>
-        {{ form.submit(class="btn btn-primary") }}
-    </form>
-</body>
-</html>
+{% extends "base.html" %}
+
+{% block title %}Edit Patient{% endblock %}
+
+{% block content %}
+<h2>Edit Patient</h2>
+<form method="POST" action="{{ url_for('edit_patient', patient_id=patient.id) }}">
+    {{ form.hidden_tag() }}
+    <p>
+        {{ form.name.label }}<br>
+        {{ form.name(size=32) }}<br>
+    </p>
+    <p>
+        {{ form.age.label }}<br>
+        {{ form.age(size=32) }}<br>
+    </p>
+    <p>
+        {{ form.medical_history.label }}<br>
+        {{ form.medical_history(cols=32, rows=4) }}<br>
+    </p>
+    <p>
+        {{ form.submit() }}
+    </p>
+</form>
+{% endblock %}

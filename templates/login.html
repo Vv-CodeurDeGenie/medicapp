@@ -1,29 +1,41 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Login</title>
-</head>
-<body>
-    <h1>Login</h1>
-    {% with messages = get_flashed_messages() %}
-        {% if messages %}
-            <ul class="messages">
-                {% for message in messages %}
-                    <li>{{ message }}</li>
-                {% endfor %}
-            </ul>
-        {% endif %}
-    {% endwith %}
-    <form method="POST" action="{{ url_for('login') }}">
-        {{ form.hidden_tag() }}
-        <label for="username">Username:</label>
-        {{ form.username }}
-        <br>
-        <label for="password">Password:</label>
-        {{ form.password }}
-        <br>
-        {{ form.submit(class="btn btn-primary") }}
-    </form>
-</body>
-</html>
+{% extends "base.html" %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+<h2>Login</h2>
+<form method="POST" action="{{ url_for('login', next=request.args.get('next')) }}">
+    {{ login_form.hidden_tag() }}
+    <p>
+        {{ login_form.username.label }}<br>
+        {{ login_form.username(size=32) }}<br>
+    </p>
+    <p>
+        {{ login_form.password.label }}<br>
+        {{ login_form.password(size=32) }}<br>
+    </p>
+    <p>
+        {{ login_form.submit() }}
+    </p>
+</form>
+
+<h2>Sign Up</h2>
+<form method="POST" action="{{ url_for('login') }}">
+    {{ registration_form.hidden_tag() }}
+    <p>
+        {{ registration_form.username.label }}<br>
+        {{ registration_form.username(size=32) }}<br>
+    </p>
+    <p>
+        {{ registration_form.password.label }}<br>
+        {{ registration_form.password(size=32) }}<br>
+    </p>
+    <p>
+        {{ registration_form.confirm_password.label }}<br>
+        {{ registration_form.confirm_password(size=32) }}<br>
+    </p>
+    <p>
+        {{ registration_form.submit() }}
+    </p>
+</form>
+{% endblock %}

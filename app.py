@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf import FlaskForm
 from wtforms import StringField, IntegerField, TextAreaField, PasswordField, SubmitField
-from wtforms.validators import DataRequired, Length, NumberRange
+from wtforms.validators import DataRequired, Length, NumberRange, EqualTo
 from flask_talisman import Talisman
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from flask_limiter import Limiter
@@ -64,6 +64,12 @@ class LoginForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired()])
     submit = SubmitField('Login')
+
+class RegistrationForm(FlaskForm):
+    username = StringField('Username', validators=[DataRequired(), Length(min=1, max=50)])
+    password = PasswordField('Password', validators=[DataRequired(), Length(min=6, max=50)])
+    confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
+    submit = SubmitField('Sign Up')
 
 @app.route('/')
 @login_required
@@ -145,17 +151,31 @@ def patient_records(patient_id):
 @app.route('/login', methods=['GET', 'POST'])
 @limiter.limit("5 per minute")
 def login():
-    form = LoginForm()
-    if form.validate_on_submit():
-        username = form.username.data
-        password = form.password.data
+    login_form = LoginForm()
+    registration_form = RegistrationForm()
+    next_page = request.args.get('next')
+
+    if login_form.validate_on_submit() and request.form['submit'] == 'Login':
+        username = login_form.username.data
+        password = login_form.password.data
         user = User.query.filter_by(username=username).first()
         if user and check_password_hash(user.password, password):
             login_user(user)
-            return redirect(url_for('index'))
+            return redirect(next_page or url_for('index'))
         else:
             flash('Invalid username or password')
-    return render_template('login.html', form=form)
+
+    elif registration_form.validate_on_submit() and request.form['submit'] == 'Sign Up':
+        username = registration_form.username.data
+        password = registration_form.password.data
+        hashed_password = generate_password_hash(password, method='pbkdf2:sha256')
+        new_user = User(username=username, password=hashed_password)
+        db.session.add(new_user)
+        db.session.commit()
+        flash('Your account has been created! Please log in.')
+        return redirect(url_for('login'))
+
+    return render_template('login.html', login_form=login_form, registration_form=registration_form)
 
 @app.route('/logout')
 @login_required

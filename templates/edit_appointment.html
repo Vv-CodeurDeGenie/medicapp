@@ -1,23 +1,25 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Edit Appointment</title>
-</head>
-<body>
-    <h1>Edit Appointment</h1>
-    <form method="POST" action="{{ url_for('edit_appointment', appointment_id=appointment.id) }}">
-        {{ form.hidden_tag() }}
-        <label for="date">Date:</label>
-        {{ form.date }}
-        <br>
-        <label for="doctor">Doctor:</label>
-        {{ form.doctor }}
-        <br>
-        <label for="patient_id">Patient:</label>
-        {{ form.patient_id }}
-        <br>
-        {{ form.submit(class="btn btn-primary") }}
-    </form>
-</body>
-</html>
+{% extends "base.html" %}
+
+{% block title %}Edit Appointment{% endblock %}
+
+{% block content %}
+<h2>Edit Appointment</h2>
+<form method="POST" action="{{ url_for('edit_appointment', appointment_id=appointment.id) }}">
+    {{ form.hidden_tag() }}
+    <p>
+        {{ form.date.label }}<br>
+        {{ form.date(size=32) }}<br>
+    </p>
+    <p>
+        {{ form.doctor.label }}<br>
+        {{ form.doctor(size=32) }}<br>
+    </p>
+    <p>
+        {{ form.patient_id.label }}<br>
+        {{ form.patient_id(size=32) }}<br>
+    </p>
+    <p>
+        {{ form.submit() }}
+    </p>
+</form>
+{% endblock %}

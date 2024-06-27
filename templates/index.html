@@ -1,28 +1,29 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Medical Center</title>
-</head>
-<body>
-    <h1>Medical Center</h1>
-    
-    <h2>Patients</h2>
-    <ul>
-        {% for patient in patients %}
-            <li><a href="{{ url_for('patient_records', patient_id=patient.id) }}">{{ patient.name }}</a></li>
-        {% endfor %}
-    </ul>
-    
-    <h2>Appointments</h2>
-    <ul>
-        {% for appointment in current_user.appointments %}
-            <li>{{ appointment.date }} with {{ appointment.doctor }} for {{ appointment.patient.name }}</li>
-        {% endfor %}
-    </ul>
+{% extends "base.html" %}
 
-    <p><a href="{{ url_for('add_patient') }}">Add Patient</a></p>
-    <p><a href="{{ url_for('book_appointment') }}">Book Appointment</a></p>
-    <p><a href="{{ url_for('logout') }}">Logout</a></p>
-</body>
-</html>
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<h2>Patient List</h2>
+<table>
+    <tr>
+        <th>Name</th>
+        <th>Age</th>
+        <th>Medical History</th>
+        <th>Actions</th>
+    </tr>
+    {% for patient in patients %}
+    <tr>
+        <td>{{ patient.name }}</td>
+        <td>{{ patient.age }}</td>
+        <td>{{ patient.medical_history }}</td>
+        <td>
+            <a href="{{ url_for('edit_patient', patient_id=patient.id) }}">Edit</a>
+            <form action="{{ url_for('delete_patient', patient_id=patient.id) }}" method="post" style="display:inline;">
+                <button type="submit">Delete</button>
+            </form>
+            <a href="{{ url_for('patient_records', patient_id=patient.id) }}">View Records</a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}
