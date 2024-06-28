@@ -5,16 +5,15 @@ FROM python:3.9-slim
 WORKDIR /app
 
 # Copier les fichiers requis dans le conteneur
-COPY requirements.txt .
-COPY app.py .
-COPY templates templates/
-COPY static static/
+COPY . /app
 
 # Installer les dépendances Python
 RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install gunicorn
+
 
 # Exposer le port sur lequel l'application Flask s'exécute
 EXPOSE 5000
 
 # Commande pour exécuter l'application Flask
-CMD ["python", "app.py"]
+CMD ["gunicorn", "-w", "4", "-b", "0.0.0.0:5000", "app:app"]

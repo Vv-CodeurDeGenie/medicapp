@@ -1,11 +1,26 @@
 version: '3.8'
 
 services:
-  web:
+  web1:
     build: .
-    ports:
-      - "5000:5000"
     volumes:
       - .:/app
     environment:
       - FLASK_ENV=development
+
+  web2:
+    build: .
+    volumes:
+      - .:/app
+    environment:
+      - FLASK_ENV=development
+
+  nginx:
+    image: nginx:latest
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    ports:
+      - "80:80"
+    depends_on:
+      - web1
+      - web2
